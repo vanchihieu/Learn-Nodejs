@@ -26,7 +26,7 @@ module.exports = {
             },
             type: {
                 type: Sequelize.STRING,
-                defaultValue: "CLIENT",
+                defaultValue: "ADMIN",
             },
             createdAt: {
                 allowNull: false,
