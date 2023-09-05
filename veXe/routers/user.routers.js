@@ -1,5 +1,11 @@
 const express = require("express");
-const { register, login } = require("../controllers/user.controllers");
+const {
+    register,
+    login,
+    uploadAvatar,
+} = require("../controllers/user.controllers");
+const { uploadImage } = require("../middlewares/upload/upload-image");
+const { authenticate } = require("../middlewares/auth/authenticate");
 
 const userRouter = express.Router();
 
@@ -7,14 +13,8 @@ userRouter.post("/register", register);
 userRouter.post("/login", login);
 
 // upload file
-const multer = require("multer");
-const upload = multer({ dest: "./uploads/avatars" });
 
-userRouter.post("/upload-avatar", upload.single("avatar"), (req, res) => {
-    res.send("Tinh nang upload file run");
-});
-
-// upload file
+userRouter.post("/upload-avatar", authenticate, uploadImage('avatar'), uploadAvatar);
 
 module.exports = {
     userRouter,

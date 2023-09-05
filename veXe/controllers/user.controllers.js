@@ -1,20 +1,22 @@
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const gravatarUrl = require("gravatar-url");
 const register = async (req, res) => {
     const { name, email, password, numberPhone } = req.body;
     try {
-        // tao ra 1 chuoi ngau nhien
+        // tạo avatar mặc định
+        const avatarUrl = gravatarUrl(email);
+        // tạo ra một chuỗi ngẫu nhiên
         const salt = bcrypt.genSaltSync(10);
-
         // mã hóa salt + password
         const hashPassword = bcrypt.hashSync(password, salt);
-
         const newUser = await User.create({
             name,
             email,
             password: hashPassword,
             numberPhone,
+            avatar: avatarUrl,
         });
         res.status(201).send(newUser);
     } catch (error) {
@@ -24,29 +26,27 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     const { email, password } = req.body;
-
     // b1 : tìm ra user đang đăng nhập dựa trên trên email
     const user = await User.findOne({
         where: {
             email,
         },
     });
-
-    // b2 : kiểm mật khẩu có đúng hay không
     if (user) {
-        const isAuth = bcrypt.compareSync(password, user.password);
+        // b2 : kiểm mật khẩu có đúng hay không
 
+        const isAuth = bcrypt.compareSync(password, user.password);
+        console.log("isAuth : ", isAuth);
         if (isAuth) {
             const token = jwt.sign(
                 { email: user.email, type: user.type },
-                "chi-hieu-key",
+                "tuong-tinh-2350",
                 { expiresIn: 60 * 60 }
-                // payload -> secret key -> time
             );
-            res.status(200).send({ message: "Dang nhap thanh cong !,", token });
+            res.status(200).send({ message: "Đăng Nhập Thành Công ! ", token });
         } else {
             res.status(500).send({
-                message: "Tai khoan hoac mat khau khong dung",
+                message: "Tài khoãng hoặc mật khẩu không đúng",
             });
         }
     } else {
@@ -54,10 +54,20 @@ const login = async (req, res) => {
     }
 };
 
+const uploadAvatar = async (req, res) => {
+    const { file } = req;
+    const urlImage = `http://localhost:3000/${file.path}`;
+    const { user } = req;
+    const userFound = await User.findOne({
+        email: user.email,
+    });
+    userFound.avatar = urlImage;
+    await userFound.save();
+    res.send(userFound);
+};
+
 module.exports = {
     register,
     login,
+    uploadAvatar,
 };
-
-// npx sequelize --help
-//npx sequelize db:migrate --name create-user
