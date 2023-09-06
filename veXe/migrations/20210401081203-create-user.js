@@ -42,3 +42,5 @@ module.exports = {
         await queryInterface.dropTable("Users");
     },
 };
+
+// run -> npx sequelize db:migrate

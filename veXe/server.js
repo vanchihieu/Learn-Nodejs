@@ -2,9 +2,12 @@ const express = require("express");
 const path = require("path");
 const { sequelize } = require("./models");
 const { rootRouter } = require("./routers");
+const Fingerprint = require("express-fingerprint");
 const app = express();
 
 //cài đặt Fingerprint
+app.use(Fingerprint());
+
 
 // cài ứng dụng sử dụng kiểu json
 app.use(express.json());

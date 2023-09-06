@@ -46,3 +46,5 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;
+
+// sequelize model:generate --name Ticket --attribute id:integer

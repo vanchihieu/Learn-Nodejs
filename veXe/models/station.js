@@ -51,3 +51,5 @@ module.exports = (sequelize, DataTypes) => {
     );
     return Station;
 };
+
+// Lam model xong -> run migrations
