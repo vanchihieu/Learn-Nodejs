@@ -1,17 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
 </head>
+
 <body>
     <h1>Chat app</h1>
+
+    <p>Count : <span id="value-count"></span></p>
+    <button id="btn-increment">
+        +1
+    </button>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         // yeu cau server ket noi voi client
-        const socket =  io()
+        const socket = io()
+
+        // nhận lại event từ server gửi về client
+        socket.on('send count server to client', (count) => {
+            document.getElementById('value-count').innerHTML = count
+        })
+
+        socket.on('send message server to client', (message) => {
+            console.log('Đã nhận được message: ' + message);
+        })
+
+        document.getElementById('btn-increment').addEventListener('click', () => {
+            // gửi sự kiện từ client lên server
+            socket.emit('send increment client to server')
+        })
     </script>
 </body>
+
 </html>
