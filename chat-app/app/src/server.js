@@ -3,6 +3,7 @@ const app = express();
 const path = require("path");
 const http = require("http");
 const socketIo = require("socket.io");
+const Filter = require("bad-words");
 
 const publicPathDirectory = path.join(__dirname, "../public");
 app.use(express.static(publicPathDirectory));
@@ -18,8 +19,16 @@ const message = "Hi everyone";
 // => On: lắng nghe sự kiện
 
 io.on("connection", (socket) => {
-    socket.on("send message from client to server", (messageText) => {
-        io.emit('send message from server to client', messageText)
+    socket.on("send message from client to server", (messageText, callback) => {
+        const filter = new Filter();
+        if (filter.isProfane(messageText)) {
+            return callback(
+                "message không hợp lệ vì có những từ không phù hợp!"
+            );
+        }
+
+        io.emit("send message from server to client", messageText);
+        callback();
     });
 
     // ngat ket noi
