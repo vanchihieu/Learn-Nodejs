@@ -16,6 +16,7 @@ const message = "Hi everyone";
 // lang nghe su kien ket noi tu client (client ket noi voi server)
 // => Emit: gửi sự kiện
 // => On: lắng nghe sự kiện
+
 io.on("connection", (socket) => {
     console.log("new client connect");
 
@@ -23,7 +24,8 @@ io.on("connection", (socket) => {
     socket.on("send increment client to server", () => {
         count++;
         // truyền count từ server về client
-        socket.emit("send count server to client", count);
+        // socket.emit("send count server to client", count);
+        io.emit("send count server to client", count);
     });
 
     // truyền count từ server về client
