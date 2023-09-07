@@ -12,14 +12,19 @@ let userList = [
 ];
 
 const addUser = (newUser) => {
-    userList = [...userList, newUser];
+    return (userList = [...userList, newUser]);
 };
 
 const getUserList = (room) => {
     return userList.filter((user) => user.room === room);
 };
 
+const removeUser = (id) => {
+    return (userList = userList.filter((user) => user.id !== id));
+};
+
 module.exports = {
     getUserList,
     addUser,
+    removeUser,
 };

@@ -5,7 +5,7 @@ const http = require("http");
 const socketIo = require("socket.io");
 const Filter = require("bad-words");
 const { createMessage } = require("./utils/create-messages");
-const { getUserList, addUser } = require("./utils/users");
+const { getUserList, addUser, removeUser } = require("./utils/users");
 const publicPathDirectory = path.join(__dirname, "../public");
 app.use(express.static(publicPathDirectory));
 
@@ -83,11 +83,17 @@ io.on("connection", (socket) => {
             "send user list from server to client",
             getUserList(room)
         );
-    });
 
-    // ngat ket noi
-    socket.on("disconnect", () => {
-        console.log("client left server");
+        // ngat ket noi
+        socket.on("disconnect", () => {
+            removeUser(socket.id);
+
+            io.to(room).emit(
+                "send user list from server to client",
+                getUserList(room)
+            );
+            console.log("client left server");
+        });
     });
 });
 
