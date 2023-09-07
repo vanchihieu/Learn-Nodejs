@@ -18,7 +18,8 @@ document.getElementById("form-messages").addEventListener("submit", (event) => {
 });
 
 socket.on("send message from server to client", (messageText) => {
-    console.log("🚀 ~ socket.on ~ messageText:", messageText);
+    // hiển thị message lên màn hình
+    
 });
 
 // Gửi vị trí
