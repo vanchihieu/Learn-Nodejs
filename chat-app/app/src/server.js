@@ -20,42 +20,57 @@ const message = "Hi everyone";
 // => On: lắng nghe sự kiện
 
 io.on("connection", (socket) => {
-    // gửi cho client vừa kết nối vào
-    socket.emit(
-        "send message from server to client",
-        createMessage("Chào mừng bạn đến với App Chat")
-    );
+    socket.on("join room from client to server", ({ room, username }) => {
+        socket.join(room);
 
-    // gửi cho các client còn lại trừ client vừa mới gửi sự kiện
-    socket.broadcast.emit(
-        "send message from server to client",
-        createMessage("có 1 client mới vừa tham gia vào app chat ")
-    );
-
-    // chat
-    socket.on("send message from client to server", (messageText, callback) => {
-        const filter = new Filter();
-        if (filter.isProfane(messageText)) {
-            return callback(
-                "message không hợp lệ vì có những từ không phù hợp!"
-            );
-        }
-
-        io.emit(
+        // chào
+        // gửi cho client vừa kết nối vào
+        socket.emit(
             "send message from server to client",
-            createMessage(messageText)
+            createMessage(`Chào mừng bạn đến với phòng ${room}`)
         );
-        callback();
-    });
 
-    // xử lý location chia sẻ vị trí
-    socket.on(
-        "share location from client to server",
-        ({ latitude, longitude }) => {
-            const linkLocation = `https://www.google.com/maps?q=${latitude},${longitude}`;
-            io.emit("share location from server to client", linkLocation);
-        }
-    );
+        // gửi cho các client còn lại trừ client vừa mới gửi sự kiện
+        socket.broadcast
+            .to(room) // tóm lại trước khi emit bạn thêm .to(room) vào để biết là mình sẽ gửi event tới room nào.
+            .emit(
+                "send message from server to client",
+                createMessage(
+                    `Client ${username} mới vừa tham gia vào phòng ${room} `
+                )
+            );
+
+        // chat
+        socket.on(
+            "send message from client to server",
+            (messageText, callback) => {
+                const filter = new Filter();
+                if (filter.isProfane(messageText)) {
+                    return callback(
+                        "message không hợp lệ vì có những từ không phù hợp!"
+                    );
+                }
+
+                io.to(room).emit(
+                    "send message from server to client",
+                    createMessage(messageText)
+                );
+                callback();
+            }
+        );
+
+        // xử lý location chia sẻ vị trí
+        socket.on(
+            "share location from client to server",
+            ({ latitude, longitude }) => {
+                const linkLocation = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                io.to(room).emit(
+                    "share location from server to client",
+                    linkLocation
+                );
+            }
+        );
+    });
 
     // ngat ket noi
     socket.on("disconnect", () => {

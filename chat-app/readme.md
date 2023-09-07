@@ -5,3 +5,6 @@ Khi emit nên dùng cái nào?
 09. phân biệt socket.emit và socket.broadcast.emit
 - socket.emit: gửi câu chào cho client đã gửi sử kiện lên (client vừa tham gia vào server)
 - socket.broadcast.emit: gửi câu thông báo cho tất cả client còn lại (trừ client gửi sự kiện lên nó)
+
+13. Xử lý emit event với room
+- tóm lại trước khi emit bạn thêm .to(room) vào để biết là mình sẽ gửi event tới room nào.
