@@ -48,9 +48,20 @@ const params = Qs.parse(queryString, {
 
 const { room, username } = params;
 
+// Hiển thị tên phòng lên màn hình
+document.getElementById("app_title").innerHTML = room;
+
 socket.emit("join room from client to server", { room, username });
 
 // Xử lý user list
 socket.on("send user list from server to client", (userList) => {
-    console.log("🚀 ~ socket.on ~ userList:", userList);
+    let contentHtml = "";
+    userList.map((user) => {
+        contentHtml += `
+        <li class="app__item-user">
+        ${user.username}
+        </li>
+        `;
+    });
+    document.getElementById("app__list-user--content").innerHTML = contentHtml;
 });
