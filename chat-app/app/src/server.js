@@ -43,6 +43,15 @@ io.on("connection", (socket) => {
         callback();
     });
 
+    // xử lý location chia sẻ vị trí
+    socket.on(
+        "share location from client to server",
+        ({ latitude, longitude }) => {
+            const linkLocation = `https://www.google.com/maps?q=${latitude},${longitude}`;
+            io.emit("share location from server to client", linkLocation);
+        }
+    );
+
     // ngat ket noi
     socket.on("disconnect", () => {
         console.log("client left server");
