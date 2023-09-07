@@ -4,8 +4,8 @@ const path = require("path");
 const http = require("http");
 const socketIo = require("socket.io");
 const Filter = require("bad-words");
-const formatTime = require("date-format");
 const { createMessage } = require("./utils/create-messages");
+const { getUserList, userList } = require("./utils/users");
 const publicPathDirectory = path.join(__dirname, "../public");
 app.use(express.static(publicPathDirectory));
 
@@ -70,6 +70,9 @@ io.on("connection", (socket) => {
                 );
             }
         );
+
+        // Xử lý userList
+        io.to(room).emit("send user list from server to client", getUserList(room));
     });
 
     // ngat ket noi
