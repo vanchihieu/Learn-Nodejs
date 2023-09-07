@@ -19,6 +19,18 @@ const message = "Hi everyone";
 // => On: lắng nghe sự kiện
 
 io.on("connection", (socket) => {
+    // gửi cho client vừa kết nối vào
+    socket.emit(
+        "send message from server to client",
+        "Chào mừng bạn đến với App Chat"
+    );
+
+    // gửi cho các client còn lại trừ client vừa mới gửi sự kiện
+    socket.broadcast.emit(
+        "send message from server to client",
+        "có 1 client mới vừa tham gia vào app chat "
+    );
+
     socket.on("send message from client to server", (messageText, callback) => {
         const filter = new Filter();
         if (filter.isProfane(messageText)) {
