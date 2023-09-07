@@ -4,7 +4,8 @@ const path = require("path");
 const http = require("http");
 const socketIo = require("socket.io");
 const Filter = require("bad-words");
-
+const formatTime = require("date-format");
+const { createMessage } = require("./utils/create-messages");
 const publicPathDirectory = path.join(__dirname, "../public");
 app.use(express.static(publicPathDirectory));
 
@@ -22,15 +23,16 @@ io.on("connection", (socket) => {
     // gửi cho client vừa kết nối vào
     socket.emit(
         "send message from server to client",
-        "Chào mừng bạn đến với App Chat"
+        createMessage("Chào mừng bạn đến với App Chat")
     );
 
     // gửi cho các client còn lại trừ client vừa mới gửi sự kiện
     socket.broadcast.emit(
         "send message from server to client",
-        "có 1 client mới vừa tham gia vào app chat "
+        createMessage("có 1 client mới vừa tham gia vào app chat ")
     );
 
+    // chat
     socket.on("send message from client to server", (messageText, callback) => {
         const filter = new Filter();
         if (filter.isProfane(messageText)) {
@@ -39,7 +41,10 @@ io.on("connection", (socket) => {
             );
         }
 
-        io.emit("send message from server to client", messageText);
+        io.emit(
+            "send message from server to client",
+            createMessage(messageText)
+        );
         callback();
     });
 
