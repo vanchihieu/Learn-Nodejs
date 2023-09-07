@@ -38,3 +38,12 @@ document.getElementById("btn-share-location").addEventListener("click", () => {
 socket.on("share location from server to client", (linkLocation) => {
     console.log("🚀 ~ linkLocation:", linkLocation);
 });
+
+// xử lý query string
+const queryString = location.search;
+console.log("🚀 ~ queryString:", queryString);
+
+const params = Qs.parse(queryString, {
+    ignoreQueryPrefix: true
+});
+console.log("🚀 ~ params:", params);

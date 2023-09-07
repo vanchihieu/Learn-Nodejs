@@ -4,39 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
+    <title>Join room</title>
 </head>
 
 <body>
-    <h1>Chat app</h1>
-
-
-    <form id="form-messages">
-        <input type="text" id="input-message">
-        <button type="submit">
-            Gửi
-        </button>
-        <button type="button" id="btn-share-location">Gửi vị trí</button>
+    <form action="/chat.html">
+        <h1>Tham gia room</h1>
+        <input type="text" name="room" id="room" placeholder="room">
+        <input type="text" name="username" id="username" placeholder="username">
+        <button type="submit">Tham gia</button>
     </form>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="./js/client-chat.js">
-        // yeu cau server ket noi voi client
-
-        // nhận lại event từ server gửi về client
-        // socket.on('send count server to client', (count) => {
-        //     document.getElementById('value-count').innerHTML = count
-        // })
-
-        // socket.on('send message server to client', (message) => {
-        //     console.log('Đã nhận được message: ' + message);
-        // })
-
-        // document.getElementById('btn-increment').addEventListener('click', () => {
-        //     // gửi sự kiện từ client lên server
-        //     socket.emit('send increment client to server')
-        // })
-    </script>
 </body>
 
 </html>
